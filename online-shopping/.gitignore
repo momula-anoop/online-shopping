@@ -1,1 +1,52 @@
+# Ignore target directory (Maven build artifacts)
 /target/
+
+# Ignore compiled Java classes
+*.class
+
+# Ignore logs
+logs/
+*.log
+
+# Ignore temporary files
+*.tmp
+*.swp
+*.swo
+
+# Ignore Eclipse project files
+/.classpath
+/.project
+/.settings/
+
+# Ignore IntelliJ IDEA project files (if applicable)
+.idea/
+*.iml
+
+# Ignore Maven wrapper files
+.mvn/
+!mvn/wrapper/maven-wrapper.jar
+
+# Ignore Gradle wrapper files (if using Gradle)
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore environment-specific properties
+/src/main/resources/application.properties
+/src/main/resources/application.yml
+/src/main/resources/application-dev.properties
+/src/main/resources/application-prod.properties
+
+# Ignore generated files
+/target/
+*.war
+*.jar
+
+# Ignore node_modules if using frontend in the same project
+node_modules/
+npm-debug.log
+yarn-error.log
