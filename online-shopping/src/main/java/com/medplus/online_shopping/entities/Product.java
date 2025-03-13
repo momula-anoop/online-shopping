@@ -24,7 +24,7 @@ public class Product {
 	private int productQuantity;
 	@Column
 	private boolean productAvailability;
-	@Column(length = 10)
+	@Column(length = 20)
 	private String category;
 
 	@Column(length = 10)
