@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,14 @@ import com.medplus.online_shopping.entities.Product;
 import com.medplus.online_shopping.exceptions.ProductNotFoundException;
 import com.medplus.online_shopping.exceptions.ProductQuantityException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
 	@Autowired
 	ProductDao productDao;
 	// for external use like sorting from low to high
-	List<Product> backupList = null;
-
 	ArrayList<Product> recentlyViewedList = null;
 
 	@Override
@@ -69,6 +71,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Optional<Product> getProductById(int id) {
+		log.info("productId :{}",id);
 		recentlyViewedList = new ArrayList<Product>();
 		Optional<Product> pOptional = productDao.findById(id);
 		if (!pOptional.isPresent()) {
@@ -83,15 +86,14 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public void removeProductById(int id) {
-
 		getProductById(id);
-
 		productDao.deleteById(id);
 
 	}
 
 	@Override
 	public List<Product> getProductsBySearch(String text) {
+		log.info(" Text search",text);
 		recentlyViewedList = new ArrayList<>();
 		ArrayList<Product> tempList = new ArrayList<>();
 		HashMap<Product, Integer> tempMap = new HashMap<>();
@@ -102,12 +104,11 @@ public class ProductServiceImpl implements ProductService {
 		String[] strings = text.split(" ");
 		for (int i = 0; i < strings.length; i++) {
 			ArrayList<Product> list = productDao.getProductsByNameOrcategory("%" + strings[i] + "%");
-			if (list.size() != 0)
+			if (!list.isEmpty())
 				tempList.addAll(list);
-
 		}
 
-		if (tempList.size() == 0) {
+		if (tempList.isEmpty()) {
 			throw new ProductNotFoundException();
 		}
 
@@ -125,7 +126,6 @@ public class ProductServiceImpl implements ProductService {
 				tempMap.put(tempList.get(i), tempMap.get(tempList.get(i)) + 1);
 
 				int k = strings.length - tempMap.get(tempList.get(i));
-				System.out.println(k);
 
 				resultListTemp.get(k).add(tempList.get(i));
 
@@ -137,10 +137,6 @@ public class ProductServiceImpl implements ProductService {
 
 		}
 
-		if (successCount == 0) {
-			backupList = tempList;
-			return tempList;
-		}
 
 		int i;
 		for (i = 0; i < resultListTemp.size(); i++) {
@@ -157,58 +153,18 @@ public class ProductServiceImpl implements ProductService {
 			throw new ProductNotFoundException();
 		}
 
-		backupList = resultList;
 		return resultList;
 
 	}
 
 	@Override
 	public List<Product> getProductsSortlowtohigh() {
-		Collections.sort(backupList, new Comparator<Product>() {
-
-			@Override
-			public int compare(Product o1, Product o2) {
-				if (o1.getProductprice() > o2.getProductprice())
-					return 1;
-				if (o1.getProductprice() < o2.getProductprice())
-					return -1;
-				return 0;
-
-			}
-
-		});
-
-		return backupList;
+		return getAllProducts().stream().sorted(Comparator.comparing(Product::getProductprice)).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<Product> getProductsSorthightolow() {
-
-		Collections.sort(backupList, new Comparator<Product>() {
-
-			@Override
-			public int compare(Product o1, Product o2) {
-				if (o1.getProductprice() > o2.getProductprice())
-					return -1;
-				if (o1.getProductprice() < o2.getProductprice())
-					return 1;
-				return 0;
-
-			}
-
-		});
-
-		return backupList;
-	}
-
-	@Override
-	public List<Product> getBackupList() {
-
-		if (backupList.size() == 0) {
-			throw new ProductNotFoundException();
-		}
-
-		return backupList;
+		return getAllProducts().stream().sorted(Comparator.comparing(Product::getProductprice).reversed()).collect(Collectors.toList());
 	}
 
 	@Override

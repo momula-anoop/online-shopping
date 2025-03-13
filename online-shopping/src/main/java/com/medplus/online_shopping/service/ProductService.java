@@ -24,8 +24,6 @@ public interface ProductService {
 
 	public List<Product> getProductsSortlowtohigh();
 
-	public List<Product> getBackupList();
-
 	public List<Product> getRecentlyViewedList();
 	
 	void changeProductQuantity(int productId,int productQuantity);

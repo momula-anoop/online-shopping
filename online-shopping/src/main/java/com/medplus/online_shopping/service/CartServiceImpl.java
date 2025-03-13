@@ -92,7 +92,7 @@ public class CartServiceImpl implements CartService {
 		for (Cart cart : cartlist) {
 			int productId = cart.getProductId();
 			Optional<Product> product = productService.getProductById(productId);
-			productList.add(product.get());
+			productList.add(product.isPresent() ? product.get() : null);
 		}
 		return productList;
 	}

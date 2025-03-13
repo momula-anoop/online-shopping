@@ -26,8 +26,7 @@ public class BuyNowServiceImpl implements BuyNowService{
 		cartList.add(cart);
 		cart.setProductId(productId);
 		cart.setProductQuantity(1);
-		String orderId = orderService.addOrder(customerId, cartList);
-		return orderId;
+		return orderService.addOrder(customerId, cartList);
 		
 	}
 
