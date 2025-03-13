@@ -31,6 +31,20 @@ public class Product {
 	private String gender;
 	
 
+	public Product() {
+	}
+
+	public Product(String productName, String productDescription, double productprice, int productQuantity,
+			boolean productAvailability, String category, String gender) {
+		this.productName = productName;
+		this.productDescription = productDescription;
+		this.productprice = productprice;
+		this.productQuantity = productQuantity;
+		this.productAvailability = productAvailability;
+		this.category = category;
+		this.gender = gender;
+	}
+
 	public int getProductId() {
 		return productId;
 	}
